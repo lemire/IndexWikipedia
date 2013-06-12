@@ -14,5 +14,5 @@ mvn exec:java -Dexec.args="yourdump someoutputdirectory"
 
 Actual example:
 
-nohup mvn compile && mvn -e exec:java -Dexec.args="/home/dlemire/WikipediaDump/enwiki-20130102-pages-articles.xml.bz2 ~/WikipediaIndex" &
+nohup mvn compile && mvn -e exec:java -Dexec.args="/home/dlemire/WikipediaDump/enwiki-20130102-pages-articles.xml.bz2 /home/dlemire/WikipediaIndex" &
 
