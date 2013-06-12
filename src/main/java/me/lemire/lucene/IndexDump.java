@@ -65,10 +65,11 @@ public class IndexDump {
 		DocMaker docMaker = new DocMaker();
 		Properties properties = new Properties();
 		properties.setProperty("docs.file", wikipediafile.getAbsolutePath());
-		properties.setProperty("content.source.forever", "false");
 		properties.setProperty("keep.image.only.docs", "false");
-		docMaker.setConfig(new Config(properties), new EnwikiContentSource());
-		docMaker.resetInputs();
+                Config c = new Config(properties);
+                EnwikiContentSource source = new EnwikiContentSource();
+                source.setConfig(c);
+		docMaker.setConfig(c,source);
 		int count = 0;
 		System.out.println("Starting Indexing of Wikipedia dump "+wikipediafile.getAbsolutePath());
 		long start = System.currentTimeMillis();

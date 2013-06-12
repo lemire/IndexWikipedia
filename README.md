@@ -6,8 +6,13 @@ A simple utility to index wikipedia dumps using Lucene.
 
 Usage:
 
-grap your wikipedia dump: http://en.wikipedia.org/wiki/Wikipedia:Database_download
+install java (JDK) if needed
+install maven if needed
+grap your wikipedia dump: http://en.wikipedia.org/wiki/Wikipedia:Database\_download
 mvn compile
-cd target/classes
-java me.lemire.lucene.IndexDump 
+mvn exec:java -Dexec.args="yourdump someoutputdirectory"
+
+Actual example:
+
+nohup mvn compile && mvn -e exec:java -Dexec.args="/home/dlemire/WikipediaDump/enwiki-20130102-pages-articles.xml.bz2 ~/WikipediaIndex" &
 
