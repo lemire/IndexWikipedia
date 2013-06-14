@@ -71,11 +71,13 @@ public class IndexDump {
                 Config c = new Config(properties);
                 EnwikiContentSource source = new EnwikiContentSource();
                 source.setConfig(c);
+                source.resetInputs();// though this does not seem needed, it is (gets the file opened?)
 		docMaker.setConfig(c,source);
 		int count = 0;
 		System.out.println("Starting Indexing of Wikipedia dump "+wikipediafile.getAbsolutePath());
 		long start = System.currentTimeMillis();
 		Document doc;
+                try{
 		while ((doc = docMaker.makeDocument()) != null) {
 			indexWriter.addDocument(doc);
 			++count;
@@ -83,8 +85,12 @@ public class IndexDump {
 				System.out.println("Indexed " + count + " documents in "
 						+ (System.currentTimeMillis() - start) + " ms");
 		}
+                }catch (org.apache.lucene.benchmark.byTask.feeds.NoMoreDataException nmd){
+                  nmd.printStackTrace();
+                }
 		long finish = System.currentTimeMillis();
 		System.out.println("Indexing "+count+ " documents took " + (finish - start) + " ms");
+                System.out.println("Total data processed: "+source.getTotalBytesCount()+" bytes");
 		System.out.println("Index should be located at "+dir.getDirectory().getAbsolutePath());
 		docMaker.close();
 		indexWriter.close();
