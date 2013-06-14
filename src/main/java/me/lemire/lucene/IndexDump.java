@@ -60,11 +60,13 @@ public class IndexDump {
 																			// words
 		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_43,
 				analyzer);
-		IndexWriter indexWriter = new IndexWriter(dir, config);
+                config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);//overwrites if needed
+                IndexWriter indexWriter = new IndexWriter(dir, config);
 
 		DocMaker docMaker = new DocMaker();
 		Properties properties = new Properties();
-		properties.setProperty("docs.file", wikipediafile.getAbsolutePath());
+                properties.setProperty("content.source.forever", "false"); // will parse each document only once
+                properties.setProperty("docs.file", wikipediafile.getAbsolutePath());
 		properties.setProperty("keep.image.only.docs", "false");
                 Config c = new Config(properties);
                 EnwikiContentSource source = new EnwikiContentSource();
@@ -81,7 +83,6 @@ public class IndexDump {
 				System.out.println("Indexed " + count + " documents in "
 						+ (System.currentTimeMillis() - start) + " ms");
 		}
-
 		long finish = System.currentTimeMillis();
 		System.out.println("Indexing "+count+ " documents took " + (finish - start) + " ms");
 		System.out.println("Index should be located at "+dir.getDirectory().getAbsolutePath());
