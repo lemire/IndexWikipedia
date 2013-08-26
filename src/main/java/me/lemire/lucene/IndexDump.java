@@ -12,8 +12,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.*;
 
 /**
  * A simple utility to index wikipedia dumps using Lucene.
@@ -97,20 +95,6 @@ public class IndexDump {
                 Document doc;
                 try {
                         while ((doc = docMaker.makeDocument()) != null) {
-
- TokenStream stream = doc.getField("body").tokenStream(analyzer);
-CharTermAttribute cattr = stream.addAttribute(CharTermAttribute.class);
-
-OffsetAttribute offsetAttribute = stream.addAttribute(OffsetAttribute.class);
-
-stream.reset();
-while (stream.incrementToken()) {
-  System.out.print(cattr.toString()+"["+offsetAttribute.startOffset()+":"+offsetAttribute.endOffset()+"]\t");
-}
-System.out.println();
-stream.end();
-stream.close();
-
                                 indexWriter.addDocument(doc);
                                 ++count;
                                 if (count % 1000 == 0)
