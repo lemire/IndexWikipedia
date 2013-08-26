@@ -27,7 +27,7 @@ import org.apache.lucene.analysis.tokenattributes.*;
  */
 public class CreateFreqSortedDictionary {
         public static void main(String[] args) throws Exception {
-                final int MinN = 10;
+                final int MinN = 0;
 
                 if (args.length <= 1) {
                         printUsage();
@@ -104,26 +104,27 @@ public class CreateFreqSortedDictionary {
                                         System.out.println("We have "
                                                 + hm.size()
                                                 + " terms so far...");
-
-                                        System.out
+                                        if(MinM>0) {
+                                          System.out
                                                 .println("Trimming terms appearing less than "
                                                         + MinN
                                                         + " times (to preserve memory)");
-                                        ArrayList<String> buffer = new ArrayList<String>();
-                                        for (Entry<String, Integer> x : hm
+                                          ArrayList<String> buffer = new ArrayList<String>();
+                                          for (Entry<String, Integer> x : hm
                                                 .entrySet()) {
                                                 if (x.getValue().intValue() < MinN)
                                                         buffer.add(x.getKey());
+                                          }
+                                          System.out.println("Removing "+buffer.size()+" terms");
+                                          for(String s: buffer) hm.remove(s);
+                                          System.out.println("Down to "+hm.size()+" terms...");
                                         }
-                                        System.out.println("Removing "+buffer.size()+" terms");
-                                        for(String s: buffer) hm.remove(s);
-                                        System.out.println("Down to "+hm.size()+" terms...");
                                 }
                         }
                 } catch (org.apache.lucene.benchmark.byTask.feeds.NoMoreDataException nmd) {
                         nmd.printStackTrace();
                 }
-                {
+                if(MinM>0) {
                         System.out
                                 .println("Trimming terms appearing less than "
                                         + MinN + " times (to preserve memory)");
