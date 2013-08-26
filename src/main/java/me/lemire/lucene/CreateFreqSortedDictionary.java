@@ -44,7 +44,7 @@ public class CreateFreqSortedDictionary {
                                 + wikipediafile.getAbsolutePath());
                         return;
                 }
-                File dictfile = new File(args[0]);
+                File dictfile = new File(args[1]);
                 PrintStream ps = new PrintStream(dictfile);
 
                 // we should be "ok" now
