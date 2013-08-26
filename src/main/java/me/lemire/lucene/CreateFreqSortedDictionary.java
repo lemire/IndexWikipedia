@@ -73,7 +73,7 @@ public class CreateFreqSortedDictionary {
                 HashMap<String, Integer> hm = new HashMap<String, Integer>();
                 try {
                         while ((doc = docMaker.makeDocument()) != null) {
-
+                                if(doc.getField("body") == null) continue;
                                 TokenStream stream = doc.getField("body")
                                         .tokenStream(analyzer);
                                 CharTermAttribute cattr = stream
@@ -116,7 +116,7 @@ public class CreateFreqSortedDictionary {
                                                         buffer.add(x.getKey());
                                         }
                                         hm.entrySet().removeAll(buffer);
-
+                                        System.out.println("Down to "+hm.size()+" terms...");
                                 }
                         }
                 } catch (org.apache.lucene.benchmark.byTask.feeds.NoMoreDataException nmd) {
