@@ -104,7 +104,7 @@ public class CreateFreqSortedDictionary {
                                         System.out.println("We have "
                                                 + hm.size()
                                                 + " terms so far...");
-                                        if(MinM>0) {
+                                        if(MinN>0) {
                                           System.out
                                                 .println("Trimming terms appearing less than "
                                                         + MinN
@@ -124,7 +124,7 @@ public class CreateFreqSortedDictionary {
                 } catch (org.apache.lucene.benchmark.byTask.feeds.NoMoreDataException nmd) {
                         nmd.printStackTrace();
                 }
-                if(MinM>0) {
+                if(MinN>0) {
                         System.out
                                 .println("Trimming terms appearing less than "
                                         + MinN + " times (to preserve memory)");
