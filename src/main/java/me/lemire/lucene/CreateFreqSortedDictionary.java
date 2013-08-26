@@ -3,9 +3,13 @@ package me.lemire.lucene;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.benchmark.byTask.feeds.DocMaker;
 import org.apache.lucene.benchmark.byTask.feeds.EnwikiContentSource;
@@ -51,13 +55,7 @@ public class CreateFreqSortedDictionary {
                                            // words
                 DocMaker docMaker = new DocMaker();
                 Properties properties = new Properties();
-                properties.setProperty("content.source.forever", "false"); // will
-                                                                           // parse
-                                                                           // //
-                                                                           // each
-                                                                           // document
-                                                                           // only
-                                                                           // once
+                properties.setProperty("content.source.forever", "false"); 
                 properties.setProperty("docs.file",
                         wikipediafile.getAbsolutePath());
                 properties.setProperty("keep.image.only.docs", "false");
@@ -136,8 +134,19 @@ public class CreateFreqSortedDictionary {
                         hm.entrySet().removeAll(buffer);
                 }
                 System.out.println("Dictionary contains "+hm.size()+" terms");
-                for (Entry<String, Integer> x : hm.entrySet()) {
-                        ps.println(x.getKey() + " " + x.getValue().intValue());
+                System.out.println("Sorting them by frequency... ");
+                ArrayList<TermFreq> al = new ArrayList<TermFreq>();
+                Set<Entry<String, Integer>> x = hm.entrySet();
+                Iterator<Entry<String, Integer>> i = x.iterator();
+                while(i.hasNext()) {
+                        Entry<String, Integer> X = i.next();
+                        al.add(new TermFreq(X.getKey(), X.getValue().intValue()));
+                        i.remove();
+                }
+                hm = null;
+                Collections.sort(al);
+                for (TermFreq tf : al) {
+                        ps.println(tf.term);
                 }
                 ps.close();
                 System.out.println("dictionary written to " + dictfile);
@@ -153,5 +162,19 @@ public class CreateFreqSortedDictionary {
         private static void printUsage() {
                 System.out
                         .println("Usage: java -cp <...> me.lemire.lucene.CreateFreqSortedDictionary somewikipediadump.xml.gz dictfile");
+        }
+}
+
+class TermFreq implements Comparable<TermFreq>{
+        public int freq;
+        public String term;
+        public TermFreq(String t, int f) {
+                freq = f;
+                term = t;
+        }
+        
+        @Override
+        public int compareTo(TermFreq a) {
+                return a.freq - this.freq;
         }
 }
