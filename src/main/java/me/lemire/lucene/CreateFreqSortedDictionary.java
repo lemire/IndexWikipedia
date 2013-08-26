@@ -115,7 +115,8 @@ public class CreateFreqSortedDictionary {
                                                 if (x.getValue().intValue() < MinN)
                                                         buffer.add(x.getKey());
                                         }
-                                        hm.entrySet().removeAll(buffer);
+                                        System.out.println("Removing "+buffer.size()+" terms");
+                                        for(String s: buffer) hm.remove(s);
                                         System.out.println("Down to "+hm.size()+" terms...");
                                 }
                         }
@@ -130,8 +131,8 @@ public class CreateFreqSortedDictionary {
                         for (Entry<String, Integer> x : hm.entrySet()) {
                                 if (x.getValue().intValue() < MinN)
                                         buffer.add(x.getKey());
-                        }
-                        hm.entrySet().removeAll(buffer);
+                        } 
+                        for(String s: buffer) hm.remove(s);
                 }
                 System.out.println("Dictionary contains "+hm.size()+" terms");
                 System.out.println("Sorting them by frequency... ");
