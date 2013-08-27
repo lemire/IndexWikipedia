@@ -136,20 +136,21 @@ public class CreateFreqSortedDictionary {
                         for(String s: buffer) hm.remove(s);
                 }
                 System.out.println("Dictionary contains "+hm.size()+" terms");
-                System.out.println("Sorting them by frequency... ");
-                ArrayList<TermFreq> al = new ArrayList<TermFreq>();
+                //System.out.println("Sorting them by frequency... ");
+                //ArrayList<TermFreq> al = new ArrayList<TermFreq>();
                 Set<Entry<String, Integer>> x = hm.entrySet();
                 Iterator<Entry<String, Integer>> i = x.iterator();
                 while(i.hasNext()) {
                         Entry<String, Integer> X = i.next();
-                        al.add(new TermFreq(X.getKey(), X.getValue().intValue()));
-                        i.remove();
+                        ps.println(X.getValue()+"\t"+X.getKey());
+                        //al.add(new TermFreq(X.getKey(), X.getValue().intValue()));
+                        //i.remove();
                 }
                 hm = null;
-                Collections.sort(al);
-                for (TermFreq tf : al) {
-                        ps.println(tf.term);
-                }
+                //Collections.sort(al);
+                //for (TermFreq tf : al) {
+                //        ps.println(tf.term);
+                //}
                 ps.close();
                 System.out.println("dictionary written to " + dictfile);
                 long finish = System.currentTimeMillis();
