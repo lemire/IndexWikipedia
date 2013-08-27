@@ -66,7 +66,7 @@ public class CreateFreqSortedDictionary {
                                      // (gets the file opened?)
                 docMaker.setConfig(c, source);
                 int count = 0;
-                System.out.println("Starting Indexing of Wikipedia dump "
+                System.out.println("Parsing Wikipedia dump "
                         + wikipediafile.getAbsolutePath());
                 long start = System.currentTimeMillis();
                 Document doc;
