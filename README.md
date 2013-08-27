@@ -16,3 +16,11 @@ Actual example:
 
 nohup mvn compile && nohup mvn -e exec:java -Dexec.args="/home/dlemire/WikipediaDump/enwiki-20130102-pages-articles.xml.bz2 /home/dlemire/WikipediaIndex" &
 
+
+
+Extracting word-frequency pairs
+-------------------------------
+
+There is also a poorly named utility to extract all word-frequency pairs. Invoke it like so (this is an example):
+
+java -cp target/classes:target/lib/* me.lemire.lucene.CreateFreqSortedDictionary /home/dlemire/enwiki-20130102-pages-articles.xml.bz2 garbagedict
