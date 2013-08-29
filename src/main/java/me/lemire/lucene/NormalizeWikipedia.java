@@ -84,6 +84,7 @@ public class NormalizeWikipedia {
                 properties.setProperty("docs.file",
                         wikipediafile.getAbsolutePath());
                 properties.setProperty("keep.image.only.docs", "false");
+                System.setProperty("tests.verbose", "false");
                 Config c = new Config(properties);
                 EnwikiContentSource source = new EnwikiContentSource();
                 source.setConfig(c);
