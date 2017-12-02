@@ -13,7 +13,6 @@ import org.apache.lucene.benchmark.byTask.feeds.DocMaker;
 import org.apache.lucene.benchmark.byTask.feeds.EnwikiContentSource;
 import org.apache.lucene.benchmark.byTask.utils.Config;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.util.Version;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.*;
 
@@ -46,10 +45,7 @@ public class CreateFrequencyDictionary {
 
                 // we should be "ok" now
 
-                StandardAnalyzer analyzer = new StandardAnalyzer(
-                        Version.LUCENE_43);// default
-                                           // stop
-                                           // words
+                StandardAnalyzer analyzer = new StandardAnalyzer();
                 DocMaker docMaker = new DocMaker();
                 Properties properties = new Properties();
                 properties.setProperty("content.source.forever", "false"); 
@@ -72,7 +68,7 @@ public class CreateFrequencyDictionary {
                         while ((doc = docMaker.makeDocument()) != null) {
                                 if(doc.getField("body") == null) continue;
                                 TokenStream stream = doc.getField("body")
-                                        .tokenStream(analyzer);
+                                        .tokenStream(analyzer,null);
                                 CharTermAttribute cattr = stream
                                         .addAttribute(CharTermAttribute.class);
 

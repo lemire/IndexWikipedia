@@ -10,7 +10,6 @@ import org.apache.lucene.benchmark.byTask.feeds.DocMaker;
 import org.apache.lucene.benchmark.byTask.feeds.EnwikiContentSource;
 import org.apache.lucene.benchmark.byTask.utils.Config;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.util.Version;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.*;
 
@@ -60,24 +59,23 @@ public class NormalizeWikipedia {
 
                 int MaxN = 1000*1000; //dictionary is limited to 1000000 words
                 BufferedReader br = new BufferedReader(new FileReader(dictfile));
-                
-                System.out.println("#Loading first "+MaxN+" words from dictionary");
-                String line;
                 HashMap<String,Integer> hm = new HashMap<String,Integer>();
-                int code = 0;
-                while((line = br.readLine())!= null) {
-                        String[] words = line.split("\t");
-                        if(words.length!=2) throw new RuntimeException("Format of dictionary should be freq<tab>term"); 
-                        hm.put(words[1],code++);
-                        if(code > MaxN) break;
+                try {
+                	System.out.println("#Loading first "+MaxN+" words from dictionary");
+                	String line;
+                	int code = 0;
+                	while((line = br.readLine())!= null) {
+                		String[] words = line.split("\t");
+                		if(words.length!=2) throw new RuntimeException("Format of dictionary should be freq<tab>term"); 
+                		hm.put(words[1],code++);
+                		if(code > MaxN) break;
+                	}
+                } finally {
+                	br.close();
                 }
-                br.close();
                 System.out.println("#Loaded "+hm.size()+" words from dictionary.");
 
-                StandardAnalyzer analyzer = new StandardAnalyzer(
-                        Version.LUCENE_43);// default
-                                           // stop
-                                           // words
+                StandardAnalyzer analyzer = new StandardAnalyzer();
                 DocMaker docMaker = new DocMaker();
                 Properties properties = new Properties();
                 properties.setProperty("content.source.forever", "false"); 
@@ -100,7 +98,7 @@ public class NormalizeWikipedia {
                                 ia.clear();
                                 if(doc.getField("body") == null) continue;
                                 TokenStream stream = doc.getField("body")
-                                        .tokenStream(analyzer);
+                                        .tokenStream(analyzer, null);
                                 CharTermAttribute cattr = stream
                                         .addAttribute(CharTermAttribute.class);
 

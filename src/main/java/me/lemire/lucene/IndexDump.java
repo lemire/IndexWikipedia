@@ -10,14 +10,13 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 
 /**
  * A simple utility to index wikipedia dumps using Lucene.
- * 
+ *
  * @author Daniel Lemire
- * 
+ *
  */
 public class IndexDump {
 
@@ -58,14 +57,10 @@ public class IndexDump {
 
                 // we should be "ok" now
 
-                FSDirectory dir = FSDirectory.open(outputDir);
+                FSDirectory dir = FSDirectory.open(outputDir.toPath());
 
-                StandardAnalyzer analyzer = new StandardAnalyzer(
-                        Version.LUCENE_43);// default
-                                           // stop
-                                           // words
-                IndexWriterConfig config = new IndexWriterConfig(
-                        Version.LUCENE_43, analyzer);
+                StandardAnalyzer analyzer = new StandardAnalyzer();
+                IndexWriterConfig config = new IndexWriterConfig(analyzer);
                 config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);// overwrites
                                                                       // if
                                                                       // needed
@@ -82,6 +77,7 @@ public class IndexDump {
                 properties.setProperty("docs.file",
                         wikipediafile.getAbsolutePath());
                 properties.setProperty("keep.image.only.docs", "false");
+                //properties.setProperty("doc.store", "true"); // if you want to store the data in the index
                 Config c = new Config(properties);
                 EnwikiContentSource source = new EnwikiContentSource();
                 source.setConfig(c);
@@ -89,6 +85,7 @@ public class IndexDump {
                                      // (gets the file opened?)
                 docMaker.setConfig(c, source);
                 int count = 0;
+                int bodycount = 0;
                 System.out.println("Starting Indexing of Wikipedia dump "
                         + wikipediafile.getAbsolutePath());
                 long start = System.currentTimeMillis();
@@ -97,14 +94,18 @@ public class IndexDump {
                         while ((doc = docMaker.makeDocument()) != null) {
                                 indexWriter.addDocument(doc);
                                 ++count;
+                                if(doc.getField("body")!=null) {
+                                  bodycount++;
+                                }
                                 if (count % 1000 == 0)
                                         System.out
                                                 .println("Indexed "
                                                         + count
-                                                        + " documents in "
+                                                        + " documents ("+bodycount+" bodies) in "
                                                         + (System
                                                                 .currentTimeMillis() - start)
                                                         + " ms");
+
                         }
                 } catch (org.apache.lucene.benchmark.byTask.feeds.NoMoreDataException nmd) {
                         nmd.printStackTrace();
@@ -115,7 +116,7 @@ public class IndexDump {
                 System.out.println("Total data processed: "
                         + source.getTotalBytesCount() + " bytes");
                 System.out.println("Index should be located at "
-                        + dir.getDirectory().getAbsolutePath());
+                        + dir.getDirectory().toAbsolutePath());
                 docMaker.close();
                 indexWriter.close();
         }
