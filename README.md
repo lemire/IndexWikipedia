@@ -24,6 +24,8 @@ mvn compile
 mvn exec:java -Dexec.args="enwiki-latest-pages-articles10.xml-p2336425p3046511.bz2 Index"
 ```
 
+Note that this precise example may fail unless you adjust the URI https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles10.xml-p2336425p3046511.bz2 since Wikipedia dumps are not guaranteed to stay at the same URI.
+
 By default, Lucene does not store the content of the documents. You can achieve this result by setting the ``doc.store`` property to ``true`` during indexing. It increases considerably the size of the index, however, because you are duplicating the data.
 
 
