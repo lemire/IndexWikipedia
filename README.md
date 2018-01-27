@@ -23,8 +23,11 @@ mkdir Index
 mvn compile
 mvn exec:java -Dexec.args="enwiki-latest-pages-articles10.xml-p2336425p3046511.bz2 Index"
 ```
+Note that this precise example may fail unless you adjust the URI https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles10.xml-p2336425p3046511.bz2 since Wikipedia dumps are not guaranteed to stay at the same URI.
+
 
 The documents have ``title``, ``name``, ``docid`` and ``body`` fields, all of which are stored with the index.
+
 
 
 Extracting word-frequency pairs
