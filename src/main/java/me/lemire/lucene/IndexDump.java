@@ -6,10 +6,10 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.benchmark.byTask.feeds.DocMaker;
 import org.apache.lucene.benchmark.byTask.feeds.EnwikiContentSource;
 import org.apache.lucene.benchmark.byTask.utils.Config;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.*;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.search.*;
 
 
 /**
@@ -77,7 +77,6 @@ public class IndexDump {
                 properties.setProperty("docs.file",
                         wikipediafile.getAbsolutePath());
                 properties.setProperty("keep.image.only.docs", "false");
-                //properties.setProperty("doc.store", "true"); // if you want to store the data in the index
                 Config c = new Config(properties);
                 EnwikiContentSource source = new EnwikiContentSource();
                 source.setConfig(c);
@@ -92,11 +91,38 @@ public class IndexDump {
                 Document doc;
                 try {
                         while ((doc = docMaker.makeDocument()) != null) {
-                                indexWriter.addDocument(doc);
-                                ++count;
-                                if(doc.getField("body")!=null) {
+                                Document mydoc = new Document();
+                                if((doc.getField("docid"))!=null) {
+                                  mydoc.add(new TextField("docid",
+                                  doc.get("docid"),
+                                   Field.Store.YES));
                                   bodycount++;
                                 }
+                                if((doc.getField("docname"))!=null) {
+                                  mydoc.add(new TextField("name",
+                                  doc.get("docname"),
+                                   Field.Store.YES));
+                                  bodycount++;
+                                }
+                                if(doc.getField("doctitle")!=null) {
+                                  mydoc.add(new TextField("title",
+                                  doc.get("doctitle"),
+                                   Field.Store.YES));
+                                  bodycount++;
+                                }
+                                if(doc.getField("body")!=null) {
+                                  if(doc.get("body") != null) {
+                                    mydoc.add(new TextField("body",
+                                    doc.get("body"),
+                                    Field.Store.YES));
+                                  bodycount++;
+                                  }
+                                }
+                                indexWriter.addDocument(mydoc);
+
+                                ++count;
+
+                                if(count == 100) break;
                                 if (count % 1000 == 0)
                                         System.out
                                                 .println("Indexed "
@@ -113,13 +139,28 @@ public class IndexDump {
                 long finish = System.currentTimeMillis();
                 System.out.println("Indexing " + count + " documents took "
                         + (finish - start) + " ms");
-                System.out.println("Total data processed: "
-                        + source.getTotalBytesCount() + " bytes");
                 System.out.println("Index should be located at "
                         + dir.getDirectory().toAbsolutePath());
-                docMaker.close();
                 indexWriter.close();
+
+                System.out.println("We are going to test the index by querying the word 'other' and getting the top 3 documents:");
+
+                IndexReader reader = DirectoryReader.open(dir);
+                IndexSearcher searcher = new IndexSearcher(reader);
+
+                Query query = new TermQuery(new Term("body", "other"));
+                TopDocs hits = searcher.search(query, 3);
+                for(ScoreDoc hit: hits.scoreDocs) {
+                   Document document = searcher.doc(hit.doc);
+                   System.out.println("Hit: ");
+                   for(IndexableField iff : document.getFields()) {
+                      String content = document.get(iff.name());
+                      if(content.length() > 40) content = content.substring(0,40)+"...";
+                      System.out.println(iff.name()+ " : " + content);
+                   }
+                }
         }
+
 
         private static void printUsage() {
                 System.out

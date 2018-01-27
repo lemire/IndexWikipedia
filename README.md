@@ -24,7 +24,7 @@ mvn compile
 mvn exec:java -Dexec.args="enwiki-latest-pages-articles10.xml-p2336425p3046511.bz2 Index"
 ```
 
-By default, Lucene does not store the content of the documents. You can achieve this result by setting the ``doc.store`` property to ``true`` during indexing. It increases considerably the size of the index, however, because you are duplicating the data.
+The documents have ``title``, ``name``, ``docid`` and ``body`` fields, all of which are stored with the index.
 
 
 Extracting word-frequency pairs
