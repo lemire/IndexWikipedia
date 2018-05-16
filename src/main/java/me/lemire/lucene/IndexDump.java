@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Properties;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.benchmark.byTask.feeds.DocMaker;
-import org.apache.lucene.benchmark.byTask.feeds.EnwikiContentSource;
 import org.apache.lucene.benchmark.byTask.utils.Config;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
