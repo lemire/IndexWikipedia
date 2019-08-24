@@ -121,7 +121,6 @@ public class IndexDump {
 
                                 ++count;
 
-                                if(count == 100) break;
                                 if (count % 1000 == 0)
                                         System.out
                                                 .println("Indexed "
@@ -147,7 +146,7 @@ public class IndexDump {
                 IndexReader reader = DirectoryReader.open(dir);
                 IndexSearcher searcher = new IndexSearcher(reader);
 
-                Query query = new TermQuery(new Term("body", "other"));
+                TermQuery query = new TermQuery(new Term("body", "other"));
                 TopDocs hits = searcher.search(query, 3);
                 for(ScoreDoc hit: hits.scoreDocs) {
                    Document document = searcher.doc(hit.doc);

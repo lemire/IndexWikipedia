@@ -28,7 +28,7 @@ Note that this precise example may fail unless you adjust the URI https://dumps.
 
 The documents have ``title``, ``name``, ``docid`` and ``body`` fields, all of which are stored with the index.
 
-
+To see how you might then query the index, see the class file 'Query.java' for a working example.
 
 Extracting word-frequency pairs
 -------------------------------
