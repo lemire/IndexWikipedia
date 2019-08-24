@@ -3,6 +3,10 @@ IndexWikipedia
 
 A simple utility to index wikipedia dumps using Lucene.
 
+This tool can be used to quickly create an index. It is then expected that a programmer will
+write some code to use the index. This project does not aim to build an end-user index.
+
+It is useful as part of research projects.
 
 ## Usage:
 
